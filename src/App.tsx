@@ -124,19 +124,19 @@ function App() {
                     </TableCell>
                   </TableRow>
                 )}
-                {isValidValue(fuelCost) && (
-                  <TableRow>
-                    <TableCell>Fuel Cost:</TableCell>
-                    <TableCell className="text-right">
-                      <strong>Rs. {Number(fuelCost).toFixed(2)}</strong>
-                    </TableCell>
-                  </TableRow>
-                )}
                 {isValidValue(fuelNeeded) && (
                   <TableRow>
                     <TableCell>Fuel Needed:</TableCell>
                     <TableCell className="text-right">
                       <strong>{Number(fuelNeeded).toFixed(2)} ltr</strong>
+                    </TableCell>
+                  </TableRow>
+                )}
+                {isValidValue(fuelCost) && (
+                  <TableRow>
+                    <TableCell>Fuel Cost:</TableCell>
+                    <TableCell className="text-right">
+                      <strong>Rs. {Number(fuelCost).toFixed(2)}</strong>
                     </TableCell>
                   </TableRow>
                 )}
