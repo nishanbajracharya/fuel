@@ -1,8 +1,8 @@
 import * as z from 'zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useFormStorage } from 'react-hook-form-storage';
 
 import { H1 } from '@/components/ui/h1';
 import { Input } from '@/components/ui/input';
@@ -42,11 +42,7 @@ function App() {
   const [fuelCost, setFuelCost] = useState<number | null>(null);
   const [fuelNeeded, setFuelNeeded] = useState<number | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const form = useForm({
     resolver: zodResolver(fuelSchema),
     defaultValues: {
       range: 0,
@@ -55,10 +51,16 @@ function App() {
       petrolPrice: 0,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
-    calculateFuelRemaining(data);
 
-  const calculateFuelRemaining = (data: Inputs) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
+  useFormStorage('fuel-calculator-data', form);
+
+  function calculateFuelRemaining(data: Inputs) {
     const { range, mileage, totalFuel, petrolPrice } = data;
 
     const fuelLeft = range / mileage;
@@ -68,11 +70,14 @@ function App() {
     setFuelLeft(fuelLeft);
     setFuelCost(fuelCost);
     setFuelNeeded(fuelNeeded);
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm">
+      <form
+        onSubmit={handleSubmit(calculateFuelRemaining)}
+        className="w-full max-w-sm"
+      >
         <Card className="w-full max-w-sm">
           <CardHeader>
             <H1>Calculate Fuel Remaining</H1>
